@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "337742495458",
+    "project_id": "steganotalk",
+    "storage_bucket": "steganotalk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337742495458:android:7a63f6a6fedfc5b93528bb",
+        "android_client_info": {
+          "package_name": "com.stegano.steganotalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337742495458-rlakppfi1h8lfjbtbmhet1n82d0r1bnd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpzGg0YCUSUAURNu7ns86iMxpEbaJnShQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337742495458-rlakppfi1h8lfjbtbmhet1n82d0r1bnd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
