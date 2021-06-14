@@ -3,6 +3,8 @@ package com.stegano.steganotalk
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -25,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     val LOGINK_REQUEST_CODE = 9001
     var firebaseAuth: FirebaseAuth? = null
 
+    // firebase sign up
+    var inflater: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,15 +38,13 @@ class MainActivity : AppCompatActivity() {
         // 파이어베이스 로그인
         firebaseAuth = FirebaseAuth.getInstance()
         loginButton.setOnClickListener {
-            val inputEmail = email.text.toString()
-            val inputPassword = password.text.toString()
-            firebaseAuth!!.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(this) {
-                if(it.isSuccessful) {
-                    Toast.makeText(this, "성공", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
-                }
-            }
+            login()
+            //FirebaseAuth.getInstance().signOut()  // 파이어베이스 로그아웃
+        }
+
+        // 파이어베이스 회원가입
+        createIdButton.setOnClickListener {
+            createId()
         }
 
         // 파이어베이스 연동 방법 : https://hamzzibari.tistory.com/58
@@ -69,6 +72,31 @@ class MainActivity : AppCompatActivity() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         view.setOnClickListener {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    private fun login() {
+        val inputEmail = email.text.toString()
+        val inputPassword = password.text.toString()
+        firebaseAuth!!.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(this) {
+            if(it.isSuccessful) {
+                Toast.makeText(applicationContext, "로그인 성공", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun createId() {
+        val inputEmail = email.text.toString()
+        val inputPassword = password.text.toString()
+        firebaseAuth!!.createUserWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(this) {
+            if(it.isSuccessful) {
+                val user = firebaseAuth?.currentUser
+                Toast.makeText(applicationContext, "회원가입 성공, ${user.toString()}", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "회원가입 실패", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
