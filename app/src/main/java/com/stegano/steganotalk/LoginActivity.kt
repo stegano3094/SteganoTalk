@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-class LoginActivity : AppCompatActivity(), View.OnClickListener {
+class LoginActivity : AppCompatActivity() {
     val TAG: String = "LoginActivity"
 
     // firebase RealtimeDatabase
@@ -54,23 +55,24 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-
-    }
-
-    override fun onClick(v: View) {
-        when(v.id) {
-            R.id.rememberButton -> {
-                Log.e(TAG, "rememberButton 터치됨")
-            }
-            else -> {
-                Log.e(TAG, "else 터치됨")
-            }
+        // 입력값 기억하기 클릭 시 값 불러오기. 테스트용도로 편리를 위해 하드코딩함
+        rememberButton.setOnClickListener {
+            email.setText("test@naver.com")
+            password.setText("qwer1234")
         }
     }
 
     private fun login() {
         val inputEmail = email.text.toString()
         val inputPassword = password.text.toString()
+        if(inputEmail.isEmpty()) {
+            Toast.makeText(this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(inputPassword.isEmpty()) {
+            Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
         firebaseAuth!!.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(this) {
             if(it.isSuccessful) {
                 Toast.makeText(applicationContext, "로그인 성공", Toast.LENGTH_SHORT).show()
@@ -85,6 +87,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun createId() {
         val inputEmail = email.text.toString()
         val inputPassword = password.text.toString()
+        if(inputEmail.isEmpty()) {
+            Toast.makeText(this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(inputPassword.isEmpty()) {
+            Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
         firebaseAuth!!.createUserWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(this) {
             if(it.isSuccessful) {
                 val user = firebaseAuth?.currentUser
@@ -96,7 +106,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun toActivity(userName: String) {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, TestActivity::class.java)
         intent.putExtra("userName", userName)
         startActivity(intent)
         finish()

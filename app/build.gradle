@@ -7,13 +7,27 @@ plugins {
 // firebase
 apply plugin: 'com.google.gms.google-services'
 
+/*
+Application order matters for android plugins.
+Because the realm-android plugin depends upon the kotlin-kapt
+plugin for applications written in Kotlin, you must apply
+the realm-android plugin after the kotlin-kapt plugin
+if your application uses the Kotlin programming language.
+(요약 : kotlin 언어를 사용할 때 kapt가 필요한데
+apply plugin: 'kotlin-kapt' 다음에 apply plugin: 'realm-android' 를 써라)
+ */
+// realm
+apply plugin: 'kotlin-kapt'  // kotlin annotation processing API
+apply plugin: 'realm-android'
+
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.stegano.steganotalk"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -46,7 +60,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
 
     // coroutine
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
+
+    // okhttp3
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
+    // retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // zxing - https://github.com/journeyapps/zxing-android-embedded#custom-layout
+    implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.5.0'
@@ -54,6 +78,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.firebase:firebase-database:20.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/home"
+        android:id="@+id/tab1"
         android:title="home"
-        android:icon="@drawable/logo_ste"
+        android:icon="@drawable/baseline_home_black_24dp"
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/talk"
+        android:id="@+id/tab2"
         android:title="talk"
-        android:icon="@drawable/googleg_disabled_color_18"
+        android:icon="@drawable/baseline_question_answer_black_24dp"
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/home1"
+        android:id="@+id/tab3"
         android:title="home"
-        android:icon="@drawable/googleg_standard_color_18"
+        android:icon="@drawable/baseline_notifications_black_24dp"
         app:showAsAction="always"
         />
 </menu>

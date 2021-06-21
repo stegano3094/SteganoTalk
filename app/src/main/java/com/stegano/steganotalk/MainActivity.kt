@@ -2,16 +2,25 @@ package com.stegano.steganotalk
 
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import okhttp3.*
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
     val TAG: String = "MainActivity"
+
+    companion object {
+        val tab1 = FirstFragment()
+        val tab2 = SecondFragment()
+        val tab3 = ThirdFragment()
+    }
 
     // firebase RealtimeDatabase
     var ref = FirebaseDatabase.getInstance().getReference("test")  // 키값으로 읽어옴
@@ -44,5 +53,30 @@ class MainActivity : AppCompatActivity() {
 //                error.toException().printStackTrace()
 //            }
 //        })
+
+        // 디폴트로 FirstFragment 선택됨
+        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, tab1).commit()
+
+        // 바텀네비뷰 리스너 설정
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.tab1 -> {
+                    with(supportFragmentManager.beginTransaction()) {
+                        replace(R.id.frameLayout, tab1)
+                    }.commit()
+                }
+                R.id.tab2 -> {
+                    with(supportFragmentManager.beginTransaction()) {
+                        replace(R.id.frameLayout, tab2)
+                    }.commit()
+                }
+                R.id.tab3 -> {
+                    with(supportFragmentManager.beginTransaction()) {
+                        replace(R.id.frameLayout, tab3)
+                    }.commit()
+                }
+            }
+            true
+        }
     }
 }
