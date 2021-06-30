@@ -2,6 +2,7 @@ package com.stegano.steganotalk
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -53,18 +54,24 @@ class LoginActivity : AppCompatActivity() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         view.setOnClickListener {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
+            email_input.clearFocus()  // 포커스 없애기
+            password_input.clearFocus()
         }
 
         // 입력값 기억하기 클릭 시 값 불러오기. 테스트용도로 편리를 위해 하드코딩함
         rememberButton.setOnClickListener {
-            email.setText("test@naver.com")
-            password.setText("qwer1234")
+            if(Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                email_input.setText("test@naver.com")  // note9
+            } else {
+                email_input.setText("ste@naver.com")  // s10 5g
+            }
+            password_input.setText("qwer1234")
         }
     }
 
     private fun login() {
-        val inputEmail = email.text.toString()
-        val inputPassword = password.text.toString()
+        val inputEmail = email_input.text.toString()
+        val inputPassword = password_input.text.toString()
         if(inputEmail.isEmpty()) {
             Toast.makeText(this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
@@ -85,8 +92,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createId() {
-        val inputEmail = email.text.toString()
-        val inputPassword = password.text.toString()
+        val inputEmail = email_input.text.toString()
+        val inputPassword = password_input.text.toString()
         if(inputEmail.isEmpty()) {
             Toast.makeText(this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show()
             return
@@ -106,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun toActivity(userName: String) {
-        val intent = Intent(this, TestActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("userName", userName)
         startActivity(intent)
         finish()

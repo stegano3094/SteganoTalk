@@ -1,58 +1,36 @@
 package com.stegano.steganotalk
 
 import android.os.Bundle
-import android.util.Log
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import okhttp3.*
-import java.io.IOException
-
 
 class MainActivity : AppCompatActivity() {
     val TAG: String = "MainActivity"
 
     companion object {
-        val tab1 = FirstFragment()
-        val tab2 = SecondFragment()
-        val tab3 = ThirdFragment()
+        val tab1 = FirstFragment()  // 내 프로필
+        val tab2 = SecondFragment()  // 채팅방 리스트
+        val tab3 = ThirdFragment()  // 설정 화면
     }
 
     // firebase RealtimeDatabase
     var ref = FirebaseDatabase.getInstance().getReference("test")  // 키값으로 읽어옴
+    private var userName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)  // 메인 화면에서는 화면 꺼짐 방지함
 
-        val userName = intent.getStringExtra("userName")
-
+        userName = intent.getStringExtra("userName").toString()
         supportActionBar?.title = userName
 
-        // 리얼타임 데이터베이스 연동 방법 : https://hamzzibari.tistory.com/58
-        // 파이어베이스에서 가져온 데이터로 타이틀 변경
-//        ref.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // 데이터 변경 감지시 호출됨
-//
-//                // test 키를 가진 데이터 스냅샷에서 값을 읽고 문자열로 변경한다
-//                val message = dataSnapshot.value.toString()
-//                // 읽은 문자 로깅
-//                Log.e(TAG, "onDataChange: " + message)
-//                // 파이어베이스에서 전달받은 메세지로 제목을 변경한다
-//                supportActionBar?.title = message
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // 데이터 읽기가 취소된 경우
-//                Log.e(TAG, "onCancelled")
-//                error.toException().printStackTrace()
-//            }
-//        })
+        // 바텀네비뷰에 데이터 전달할 객체 생성
+        val bundle = Bundle()
+        bundle.putString("userName", intent.getStringExtra("userName").toString())
+        tab1.arguments = bundle
 
         // 디폴트로 FirstFragment 선택됨
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, tab1).commit()
@@ -61,9 +39,9 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.tab1 -> {
-                    with(supportFragmentManager.beginTransaction()) {
-                        replace(R.id.frameLayout, tab1)
-                    }.commit()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.frameLayout, tab1)
+                        .commit()
                 }
                 R.id.tab2 -> {
                     with(supportFragmentManager.beginTransaction()) {

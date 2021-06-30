@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/tab1"
-        android:title="home"
-        android:icon="@drawable/baseline_home_black_24dp"
+        android:title="Home"
+        android:icon="@mipmap/baseline_home_black_24dp"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/tab2"
-        android:title="talk"
-        android:icon="@drawable/baseline_question_answer_black_24dp"
+        android:title="Talk"
+        android:icon="@mipmap/baseline_question_answer_black_24dp"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/tab3"
-        android:title="home"
-        android:icon="@drawable/baseline_notifications_black_24dp"
+        android:title="Setting"
+        android:icon="@mipmap/baseline_notifications_black_24dp"
         app:showAsAction="always"
         />
 </menu>
