@@ -33,8 +33,9 @@ class FirstFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         my_friend_recycler_view.layoutManager = layoutManager
         val friendsListAdapter = FriendsListAdapter()
-        friendsListAdapter.friends.add(MyFriendListData("내 친구1"))
-        friendsListAdapter.friends.add(MyFriendListData("내 친구2"))
+        friendsListAdapter.friends.add(MyFriendListData("test@naver.com"))
+        friendsListAdapter.friends.add(MyFriendListData("ste@naver.com"))
+        friendsListAdapter.friends.add(MyFriendListData())
         my_friend_recycler_view.adapter = friendsListAdapter
     }
 }

@@ -14,8 +14,8 @@
         android:roundIcon="@mipmap/logo_ste"
         android:supportsRtl="true"
         android:theme="@style/Theme.SteganoTalk">
-        <activity android:name=".ChattingActivity"></activity>
-        <activity android:name=".TestActivity" />
+        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".ChattingActivity" />
         <activity android:name=".MainActivity" />
         <activity
             android:name=".LoginActivity"

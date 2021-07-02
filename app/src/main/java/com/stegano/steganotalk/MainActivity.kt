@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         userName = intent.getStringExtra("userName").toString()
         supportActionBar?.title = userName
 
-        // 바텀네비뷰에 데이터 전달할 객체 생성
+        // 바텀네비뷰에 데이터를 전달할 번들 생성
         val bundle = Bundle()
-        bundle.putString("userName", intent.getStringExtra("userName").toString())
+        bundle.putString("userName", userName)
         tab1.arguments = bundle
 
         // 디폴트로 FirstFragment 선택됨
@@ -39,11 +39,13 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.tab1 -> {
+                    tab1.arguments = bundle
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, tab1)
                         .commit()
                 }
                 R.id.tab2 -> {
+                    tab2.arguments = bundle
                     with(supportFragmentManager.beginTransaction()) {
                         replace(R.id.frameLayout, tab2)
                     }.commit()
