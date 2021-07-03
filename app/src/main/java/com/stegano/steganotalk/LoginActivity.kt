@@ -2,21 +2,18 @@ package com.stegano.steganotalk
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
-
 
 class LoginActivity : AppCompatActivity() {
     val TAG: String = "LoginActivity"
@@ -29,12 +26,24 @@ class LoginActivity : AppCompatActivity() {
         private const val RC_SIGN_IN = 722
     }
 
+    // 아이디, 비밀번호를 저장하는 객체
+    val sharedPreferences by lazy { getSharedPreferences("UserIdPassword", Context.MODE_PRIVATE) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         // FirebaseAuth 사용 방법 : https://firebase.google.com/docs/auth/android/firebaseui
         firebaseAuth = FirebaseAuth.getInstance()  // 파이어베이스 인증 인스턴스
+
+        // alreadyLoginUser가 null이 아닐 때 바로 MainActivity로 바로 이동됨
+        val alreadyLoginUser = firebaseAuth!!.currentUser
+        Log.d(TAG, "onCreate: alreadyLoginUser: $alreadyLoginUser")
+        alreadyLoginUser?.let {
+            Log.d(TAG, "onCreate: user.email: ${it.email}")
+            Log.d(TAG, "onCreate: user.uid.toString(): ${it.uid.toString()}")
+            toActivity(it.email.toString(), it.uid.toString())
+        }
 
         loginButton.setOnClickListener {  // 앱 아이디로 로그인 버튼 클릭 시
             appLogin()
@@ -64,18 +73,24 @@ class LoginActivity : AppCompatActivity() {
             password_input.clearFocus()
         }
 
-        // 입력값 기억하기 클릭 시 값 불러오기. 테스트용도로 편리를 위해 하드코딩함
-        rememberButton.setOnClickListener {
-            if(Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                email_input.setText("test@naver.com")  // note9
-            } else {
-                email_input.setText("ste@naver.com")  // s10 5g
-            }
-            password_input.setText("qwer1234")
+        // 입력값 기억하기 클릭 시 값 불러오기
+        rememberCheckBox.isChecked = sharedPreferences.getBoolean("rememberCheckBoxChecked", false)
+        if(rememberCheckBox.isChecked) {
+            val getEmail = sharedPreferences.getString("userEmail", "")
+            val getPassword = sharedPreferences.getString("userPassword", "")
+            email_input.setText(getEmail)
+            password_input.setText(getPassword)
+        }
+        rememberCheckBox.setOnClickListener {  // 체크박스 클릭 리스너
+            if(rememberCheckBox.isChecked)  // 체크 상태를 저장함
+                sharedPreferences.edit().putBoolean("rememberCheckBoxChecked", true).apply()
+            else
+                sharedPreferences.edit().putBoolean("rememberCheckBoxChecked", false).apply()
         }
     }
 
-    private fun appLogin() {  // app login
+    // app login
+    private fun appLogin() {
         val inputEmail = email_input.text.toString()
         val inputPassword = password_input.text.toString()
 
@@ -90,17 +105,23 @@ class LoginActivity : AppCompatActivity() {
 
         firebaseAuth!!.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(this) {
             if(it.isSuccessful) {
-                Toast.makeText(applicationContext, "로그인 성공", Toast.LENGTH_SHORT).show()
+                // 로그인 성공 시 값을 저장함
+                if(rememberCheckBox.isChecked) {  // 체크 박스가 체크된 상태면 useEmail을 저장함
+                    sharedPreferences.edit().putString("userEmail", inputEmail).apply()
+                    sharedPreferences.edit().putString("userPassword", inputPassword).apply()
+                }
+//                Toast.makeText(applicationContext, "로그인 성공", Toast.LENGTH_SHORT).show()
                 val userEmail: String = inputEmail  // 앱에서 회원가입 후 로그인 시 이메일을 닉네임으로 함
                 val user = firebaseAuth!!.currentUser
                 toActivity(userEmail, user?.uid.toString())
             } else {
-                Toast.makeText(applicationContext, "로그인 실패", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "아이디 또는 비밀번호가 맞지 않습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun signIn() {  // google login
+    // google login
+    private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)  // 구글 로그인을 위해 이동됨
     }
@@ -132,9 +153,10 @@ class LoginActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = firebaseAuth!!.currentUser
-                    Log.d(TAG, "firebaseAuthWithGoogle: user: $user")
-                    Log.d(TAG, "firebaseAuthWithGoogle: user?.displayName.toString(): ${user?.displayName.toString()}")
-                    toActivity(user?.displayName.toString(), user?.uid.toString())
+                    //Log.d(TAG, "firebaseAuthWithGoogle: user: $user")
+                    Log.d(TAG, "firebaseAuthWithGoogle: user?.email.toString(): ${user?.email.toString()}")
+                    Log.d(TAG, "firebaseAuthWithGoogle: user?.uid.toString(): ${user?.uid.toString()}")
+                    toActivity(user?.email.toString(), user?.uid.toString())
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -142,6 +164,7 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    // 메인 화면으로 이동하는 코드
     private fun toActivity(userName: String, uid: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("userName", userName)  // 닉네임 (중복 가능)

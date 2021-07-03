@@ -1,5 +1,6 @@
 package com.stegano.steganotalk
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_first.*
-import kotlinx.android.synthetic.main.my_profile.*
 
 class FirstFragment : Fragment() {
     companion object {
@@ -22,6 +23,8 @@ class FirstFragment : Fragment() {
     {
         return inflater.inflate(R.layout.fragment_first, container, false)
     }
+
+    lateinit var firebaseAuth: FirebaseAuth
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -37,5 +40,17 @@ class FirstFragment : Fragment() {
         friendsListAdapter.friends.add(MyFriendListData("ste@naver.com"))
         friendsListAdapter.friends.add(MyFriendListData())
         my_friend_recycler_view.adapter = friendsListAdapter
+
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        val user = firebaseAuth.currentUser
+        Log.d(TAG, "onActivityCreated: user: $user")
+        signOutButton.setOnClickListener {
+            firebaseAuth.signOut()
+            Log.d(TAG, "onActivityCreated: signOutButton Clicked")
+            val intentGoToLoginActivity = Intent(context, LoginActivity::class.java)
+            startActivity(intentGoToLoginActivity)
+            activity?.finish()
+        }
     }
 }

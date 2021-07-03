@@ -15,8 +15,6 @@ class MainActivity : AppCompatActivity() {
         val tab3 = ThirdFragment()  // 설정 화면
     }
 
-    // firebase RealtimeDatabase
-    var ref = FirebaseDatabase.getInstance().getReference("test")  // 키값으로 읽어옴
     private var userName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         // 바텀네비뷰에 데이터를 전달할 번들 생성
         val bundle = Bundle()
+        bundle.putString("userName", userName)
         bundle.putString("userName", userName)
         tab1.arguments = bundle
 

@@ -28,7 +28,7 @@ class ChatRoomListAdapter : RecyclerView.Adapter<ItemViewHolder>() {
         holder.setItem( roomListData[position] )
         holder.itemView.setOnClickListener {
             listener.onRoomListClick(holder, holder.itemView, position)  // 리스너에 인터페이스를 붙여줌
-            Snackbar.make(holder.itemView, "${roomListData[position]}", 1000).show()
+            //Snackbar.make(holder.itemView, "${roomListData[position]}", 1000).show()
         }
     }
 

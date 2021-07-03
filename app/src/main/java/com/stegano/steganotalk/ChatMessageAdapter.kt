@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.chat_item_yourchat.view.*
 
 data class MessageItem(
     val message: String,
-    val nickName: String
+    val nickName: String = "Anonymous"
     )
 
 class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -20,7 +20,7 @@ class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 class ChatMessageAdapter : RecyclerView.Adapter<MessageViewHolder>() {
     var messageItems = ArrayList<MessageItem>()
-    var myNickName = "Anonymous"
+    var myNickName = ""
 
     override fun getItemViewType(position: Int): Int {
 //        return super.getItemViewType(position)
