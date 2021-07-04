@@ -9,9 +9,9 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/logo_ste"
+        android:icon="@mipmap/ic_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logo_ste"
+        android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SteganoTalk">
         <activity android:name=".SignupActivity"></activity>

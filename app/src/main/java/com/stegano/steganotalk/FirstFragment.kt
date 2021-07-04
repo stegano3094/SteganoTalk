@@ -30,7 +30,6 @@ class FirstFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val resultData = arguments?.getString("userName") ?: "Anonymous"
-        my_id.text = resultData
         Log.e(TAG, "onCreateView: resultData : $resultData")
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -41,10 +40,11 @@ class FirstFragment : Fragment() {
         friendsListAdapter.friends.add(MyFriendListData())
         my_friend_recycler_view.adapter = friendsListAdapter
 
-
         firebaseAuth = FirebaseAuth.getInstance()
-        val user = firebaseAuth.currentUser
-        Log.d(TAG, "onActivityCreated: user: $user")
+
+        SetProfile()
+
+        // 로그아웃 버튼 클릭 시
         signOutButton.setOnClickListener {
             firebaseAuth.signOut()
             Log.d(TAG, "onActivityCreated: signOutButton Clicked")
@@ -52,5 +52,13 @@ class FirstFragment : Fragment() {
             startActivity(intentGoToLoginActivity)
             activity?.finish()
         }
+    }
+
+    private fun SetProfile() {  // 내 프로필 세팅
+        val userId = MyProfileData().myEmail
+        val userUid = MyProfileData().myUid
+        textViewUserId.text = userId
+        textViewUserUid.text = userUid
+        Log.d(TAG, "onActivityCreated: userId: $userId, userUid: $userUid")
     }
 }

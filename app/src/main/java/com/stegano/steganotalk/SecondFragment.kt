@@ -26,8 +26,9 @@ class SecondFragment : Fragment() {
         recyclerview_chat_room_list.layoutManager = layoutManager
 
         val roomListAdapter = ChatRoomListAdapter()
-        roomListAdapter.roomListData.add(RoomListItem("1번 방"))  // 전체 채팅방 2개 생성됌
-        roomListAdapter.roomListData.add(RoomListItem("2번 방"))
+        roomListAdapter.roomListData.add(RoomListItem("전체 채팅방 1"))  // 기본적인 전체 채팅방 생성
+        roomListAdapter.roomListData.add(RoomListItem("전체 채팅방 2"))
+        roomListAdapter.roomListData.add(RoomListItem("전체 채팅방 3"))
         recyclerview_chat_room_list.adapter = roomListAdapter
 
         roomListAdapter.listener = object: OnRoomListClickListener {

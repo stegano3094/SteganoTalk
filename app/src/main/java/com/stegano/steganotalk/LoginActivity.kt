@@ -41,12 +41,12 @@ class LoginActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate: alreadyLoginUser: $alreadyLoginUser")
         alreadyLoginUser?.let {
             Log.d(TAG, "onCreate: user.email: ${it.email}")
-            Log.d(TAG, "onCreate: user.uid.toString(): ${it.uid.toString()}")
-            toActivity(it.email.toString(), it.uid.toString())
+            Log.d(TAG, "onCreate: user.uid: ${it.uid}")
+            toActivity(it.email.toString(), it.uid)
         }
 
         loginButton.setOnClickListener {  // 앱 아이디로 로그인 버튼 클릭 시
-            appLogin()
+            appSignIn()
             //FirebaseAuth.getInstance().signOut()  // 파이어베이스 로그아웃
             //FirebaseAuth.getInstance().delete()  // 파이어베이스 계정 삭제
         }
@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         googleLoginButton.setOnClickListener {  // 구글 통합 아이디로 로그인 시
-            signIn()
+            googleSignIn()
         }
 
         // 회원가입 화면으로 이동
@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // app login
-    private fun appLogin() {
+    private fun appSignIn() {
         val inputEmail = email_input.text.toString()
         val inputPassword = password_input.text.toString()
 
@@ -113,15 +113,24 @@ class LoginActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "로그인 성공", Toast.LENGTH_SHORT).show()
                 val userEmail: String = inputEmail  // 앱에서 회원가입 후 로그인 시 이메일을 닉네임으로 함
                 val user = firebaseAuth!!.currentUser
-                toActivity(userEmail, user?.uid.toString())
+
+                if(user!!.isEmailVerified) {  // 이메일 인증되었는지 확인하는 코드
+                    Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                    toActivity(userEmail, user.uid)
+                    Log.d(TAG, "appSignIn: 인증되었습니다.")
+                } else {
+                    Toast.makeText(this, "인증 메일을 확인해주세요.", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "인증 메일을 확인해주세요.")
+                }
+
             } else {
-                Toast.makeText(applicationContext, "아이디 또는 비밀번호가 맞지 않습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "아이디 또는 비밀번호가 맞지 않거나 회원가입이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     // google login
-    private fun signIn() {
+    private fun googleSignIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)  // 구글 로그인을 위해 이동됨
     }
@@ -166,6 +175,9 @@ class LoginActivity : AppCompatActivity() {
 
     // 메인 화면으로 이동하는 코드
     private fun toActivity(userName: String, uid: String) {
+        MyProfileData(userName, uid)  // 데이터 클래스 객체에 저장함
+        Log.d(TAG, "toActivity: userName: $userName, uid: $uid")
+
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("userName", userName)  // 닉네임 (중복 가능)
         intent.putExtra("uid", uid)  // 메시지를 누가 썻는지 확인을 위해서 uid를 추가해서 보내줌 (중복 불가)

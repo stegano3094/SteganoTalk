@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
             while(count <= 3) {  // N번 시도함
                 count++
                 if (networkCheck()) {  // 네트워크 연결되면 루프를 종료하고 startActivity 실행함
-                    Thread.sleep(1000)  // 너무 빨라서 1초 지연시킴
+                    Thread.sleep(300)  // 너무 빨라서 지연시킴
                     startActivity(Intent(this, LoginActivity::class.java))
                     break
                 } else {
