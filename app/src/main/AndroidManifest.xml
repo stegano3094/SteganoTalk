@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SteganoTalk">
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".PasswordResetActivity"></activity>
+        <activity android:name=".SignupActivity" />
         <activity android:name=".ChattingActivity" />
         <activity android:name=".MainActivity" />
         <activity

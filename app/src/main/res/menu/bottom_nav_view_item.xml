@@ -13,10 +13,4 @@
         android:icon="@mipmap/baseline_question_answer_black_24dp"
         app:showAsAction="always"
         />
-    <item
-        android:id="@+id/tab3"
-        android:title="Setting"
-        android:icon="@mipmap/baseline_notifications_black_24dp"
-        app:showAsAction="always"
-        />
 </menu>

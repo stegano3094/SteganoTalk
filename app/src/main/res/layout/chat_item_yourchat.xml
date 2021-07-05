@@ -15,6 +15,7 @@
         android:id="@+id/userMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="18sp"
         android:text="다른 사용자 메시지" />
 
 </LinearLayout>

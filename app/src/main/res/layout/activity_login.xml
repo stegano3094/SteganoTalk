@@ -118,13 +118,13 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/findIdButton"
+            android:id="@+id/passwordResetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textAlignment="center"
             android:layout_weight="1"
-            android:text="아이디찾기" />
+            android:text="비밀번호 재설정" />
 
         <TextView
             android:layout_width="wrap_content"

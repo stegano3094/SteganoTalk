@@ -63,14 +63,14 @@ class SignupActivity : AppCompatActivity() {
                 user!!.sendEmailVerification()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(applicationContext, "해당 메일로 인증 메일을 보냈습니다. 확인해주세요.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "해당 메일로 인증 메일을 보냈습니다. 확인해주세요.", Toast.LENGTH_LONG).show()
                             finish()  // 회원가입 성공 시 회원가입 화면 닫기
                         } else {
-                            Toast.makeText(applicationContext, "인증 메일을 보내지 못했습니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "인증 메일을 보내지 못했습니다. 잠시 후 다시 시도해주세요", Toast.LENGTH_LONG).show()
                         }
                     }
             } else {
-                Toast.makeText(applicationContext, "해당하는 이메일 또는 비밀번호를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "해당 이메일 또는 비밀번호를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
         // 로그인 시 추가로 if문을 써서 이메일로 인증 되었는지 확인해주면 됨 (로그인 화면에서)

@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.chat_item_yourchat.view.*
 data class MessageItem(
     val message: String,
     val nickName: String = "Anonymous"
-    )
+)
 
 class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun setItem(item: MessageItem) {

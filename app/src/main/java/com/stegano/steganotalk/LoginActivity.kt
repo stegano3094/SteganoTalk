@@ -45,24 +45,30 @@ class LoginActivity : AppCompatActivity() {
             toActivity(it.email.toString(), it.uid)
         }
 
-        loginButton.setOnClickListener {  // 앱 아이디로 로그인 버튼 클릭 시
+        // 앱 아이디로 로그인 버튼 클릭 시
+        loginButton.setOnClickListener {
             appSignIn()
             //FirebaseAuth.getInstance().signOut()  // 파이어베이스 로그아웃
             //FirebaseAuth.getInstance().delete()  // 파이어베이스 계정 삭제
         }
-
+        // 구글 통합 아이디로 로그인 시
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-        googleLoginButton.setOnClickListener {  // 구글 통합 아이디로 로그인 시
+        googleLoginButton.setOnClickListener {
             googleSignIn()
         }
 
         // 회원가입 화면으로 이동
         signupButton.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
+        }
+
+        // 비밀번호 재설정 화면으로 이동
+        passwordResetButton.setOnClickListener {
+            startActivity(Intent(this, PasswordResetActivity::class.java))
         }
 
         // 확인을 누르면 키보드가 닫히도록 할 때 아래 코드를 넣어준다. Soft가 붙은 것은 가상 키보드임
