@@ -1,12 +1,20 @@
 package com.stegano.steganotalk
 
+import android.Manifest
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.addPauseListener
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -29,9 +37,73 @@ class LoginActivity : AppCompatActivity() {
     // 아이디, 비밀번호를 저장하는 객체
     val sharedPreferences by lazy { getSharedPreferences("UserIdPassword", Context.MODE_PRIVATE) }
 
+    // 권한
+    // https://developer.android.com/training/permissions/requesting
+    private val permissionsCode = 999
+    private val requestPermissions = arrayOf(
+        Manifest.permission.READ_PHONE_STATE
+    )
+
+    // 권한 확인 및 요청하는 메서드
+    private fun checkPermissions() {
+        val rejectedPermissionList = ArrayList<String>()  // 거절되었거나 수락하지 않은 권한을 저장할 배열
+
+        // 필요한 권한들이 허가를 받았는지 확인
+        for(permission in requestPermissions){
+            if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                rejectedPermissionList.add(permission)  // 허가된 권한이 아니면 배열에 추가
+            }
+        }
+
+        if(rejectedPermissionList.isNotEmpty()){
+            val array = arrayOfNulls<String>(rejectedPermissionList.size)
+            // 권한 요청, requestPermissions(CONTEXT, arrayOf(Manifest.permission.REQUESTED_PERMISSION), REQUEST_CODE)
+            ActivityCompat.requestPermissions(this, rejectedPermissionList.toArray(array), permissionsCode)
+        }
+    }
+
+    // requestPermissions로 권한 요청 후 결과
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {  // 이 앱의 권한요청 코드번호인지 확인
+            permissionsCode -> {
+                if(grantResults.isNotEmpty()) {
+                    for((i, permission) in permissions.withIndex()) {
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            // 권한 획득 실패
+                            Log.i(TAG, "The user has denied to $permission")
+                            Log.i(TAG, "I can't work for you anymore then. ByeBye!")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // 권한 확인 및 요청 코드
+        checkPermissions()
+
+        // 웰컴 텍스트 클릭 시 로티 애니메이션 보여주기
+        animation_view.visibility = View.INVISIBLE  // 로티애니메이션뷰를 처음에는 안보여줌
+        welcome_text.setOnClickListener {
+            animation_view.visibility = View.VISIBLE
+//            animation_view.playAnimation()  // 이것만 써도 플레이 됨, 간단한 방법
+
+            // 커스텀 애니메이션, ofFloat(시작 퍼센트, 끝날 퍼센트)
+            val animator = ValueAnimator.ofFloat(0.1f, 0.6f).setDuration(2000)
+            animator.addUpdateListener {  // 애니메이션이 진행되는 동안 실행됨
+                animation_view.setProgress(it.animatedValue as Float)
+                if(animation_view.progress >= 0.6f) {  // 설정한 애니메이션의 끝일 때 실행
+                    animation_view.visibility = View.INVISIBLE
+                }
+            }
+            animator.start()  // 로티 애니메이션 시작
+        }
+
 
         // FirebaseAuth 사용 방법 : https://firebase.google.com/docs/auth/android/firebaseui
         firebaseAuth = FirebaseAuth.getInstance()  // 파이어베이스 인증 인스턴스

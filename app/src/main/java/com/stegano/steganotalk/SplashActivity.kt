@@ -3,11 +3,15 @@ package com.stegano.steganotalk
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
+
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +27,13 @@ class SplashActivity : AppCompatActivity() {
             while(count <= 3) {  // N번 시도함
                 count++
                 if (networkCheck()) {  // 네트워크 연결되면 루프를 종료하고 startActivity 실행함
+
+                    FirebaseApp.initializeApp( /*context=*/this)
+                    val firebaseAppCheck = FirebaseAppCheck.getInstance()
+                    firebaseAppCheck.installAppCheckProviderFactory(
+                        SafetyNetAppCheckProviderFactory.getInstance()
+                    )
+
                     Thread.sleep(300)  // 너무 빨라서 지연시킴
                     startActivity(Intent(this, LoginActivity::class.java))
                     break

@@ -44,7 +44,7 @@ class ChattingActivity : AppCompatActivity() {
 
         userEmail = intent.getStringExtra("userEmail").toString()
         roomName = intent.getStringExtra("roomName").toString()  // 유저가 보는 방 이름
-        roomUid = intent.getStringExtra("roomUid").toString()  // 유저한테는 보이지 않지만 방 구분하는
+        roomUid = intent.getStringExtra("roomUid").toString()  // 유저한테는 보이지 않지만 방 구분하는 용도
 
         setSupportActionBar(toolbar)
         supportActionBar?.title = roomName  // 채팅방의 타이틀 변경
@@ -78,7 +78,7 @@ class ChattingActivity : AppCompatActivity() {
 //        })
 
         // 데이터베이스에서 데이터 가져오기 ( 테스트용으로 String을 썼지만 RecyclerView를 사용하는 것이 좋음)
-        FirebaseDatabase.getInstance().getReference(roomUid).addChildEventListener(object : ChildEventListener {
+        FirebaseDatabase.getInstance().getReference("chat/$roomUid").addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 snapshot.let {
                     val firebaseMessage = it.getValue(FirebaseMessage::class.java)
@@ -140,7 +140,7 @@ class ChattingActivity : AppCompatActivity() {
 
             // 이렇게 클래스를 만들어도 되고 HashMap을 만들어서 그 안에 값을 넣고 setValue에 넣어도 됨
             val firebaseMessage = FirebaseMessage()
-            val newRef = FirebaseDatabase.getInstance().getReference(roomUid).push()
+            val newRef = FirebaseDatabase.getInstance().getReference("chat/$roomUid").push()
             firebaseMessage.name = userEmail
             firebaseMessage.message = inputEditText.text.toString()
             firebaseMessage.timeStamp = System.currentTimeMillis()

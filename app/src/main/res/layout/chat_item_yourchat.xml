@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:background="@mipmap/chat_item_yourchat"
         android:text="다른 사용자 메시지" />
 
 </LinearLayout>

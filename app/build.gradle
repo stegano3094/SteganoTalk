@@ -51,6 +51,10 @@ android {
 }
 
 dependencies {
+    // lottie animation, 변수 쓸 때에는 " 큰 따옴표를 써야 함
+    def lottieVersion = '3.7.0'
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     // firebase
     implementation platform('com.google.firebase:firebase-bom:28.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -58,6 +62,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1' // firebase login
     implementation 'com.google.android.gms:play-services-auth:19.0.0' // google login
     implementation 'com.google.firebase:firebase-auth-ktx' // google login
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta01'  // firebase의 App Check Android 라이브러리
 
     // coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'

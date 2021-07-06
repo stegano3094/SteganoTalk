@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_first.*
 
@@ -40,15 +40,10 @@ class FirstFragment : Fragment() {
 
         SetProfile()  // 내 프로필 정보를 보여줌
 
-        // 친구 목록을 리사이클러뷰로 보여줌
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        my_friend_recycler_view.layoutManager = layoutManager
-        val friendsListAdapter = FriendsListAdapter()
-        friendsListAdapter.friends.add(MyFriendListData(userEmail, userUid))  // 자기자신 추가
-//        for(i in 1..20) {  // 테스트용으로 20명의 동일한 친구를 미리 생성함
-//            friendsListAdapter.friends.add(MyFriendListData("test@naver.com"))
-//        }
-        my_friend_recycler_view.adapter = friendsListAdapter
+        // FAB 버튼 클릭 시 친추 기능
+        floatingActionButton.setOnClickListener {
+            Snackbar.make(floatingActionButton, "Snackbar", 500).show()
+        }
 
         // 로그아웃 버튼 클릭 시
         signOutButton.setOnClickListener {
